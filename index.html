@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>緣渡命理．籤詩解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap">
+<link rel="stylesheet" href="app.css">
+<style>.boot{min-height:100vh;display:grid;place-items:center;color:#7C8390;font-size:15px;text-align:center;padding:24px}</style>
+</head>
+<body>
+<div id="root"><div class="boot">籤詩載入中…</div></div>
+<script src="config.js"></script>
+<script>
+(function(){
+  var C=window.QP_CONFIG||{};
+  function fail(msg){document.getElementById("root").innerHTML='<div class="boot">'+msg+'</div>'}
+  fetch(C.url+"/rest/v1/qianpu?id=eq.main&select=data",{headers:(/^sb_/.test(C.anonKey||"")?{apikey:C.anonKey}:{apikey:C.anonKey,Authorization:"Bearer "+C.anonKey}),cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
+    .then(function(rows){
+      window.QP_STATE=(rows&&rows[0]&&rows[0].data)||{site:{},topics:[]};
+      if(window.QP_STATE.site&&window.QP_STATE.site.title)document.title=window.QP_STATE.site.title;
+      var s=document.createElement("script");s.src="app.js";document.body.appendChild(s);
+    })
+    .catch(function(){fail("籤詩暫時載入不了，請稍後再重新整理一次")});
+})();
+</script>
+</body>
+</html>
